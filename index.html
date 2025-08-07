@@ -232,18 +232,18 @@
                 <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
                     <!-- Screenshot cards -->
                     <div class="bg-gray-700 rounded-lg overflow-hidden border border-gray-600 hover:border-purple-500 transition-colors">
-                        <img src="pics/Screenshot 2025-08-07 211902.png" alt="Development Screenshot" class="w-full h-64 object-cover">
+                        <img src="pics/Screenshot 2025-08-07 211902.png" alt="Development Screenshot" class="w-full h-64 object-cover cursor-pointer hover:opacity-90 transition-opacity" onclick="openFullscreen(this)">
                         <div class="p-4">
                             <p class="text-gray-200 font-medium">WemX Integration Progress</p>
-                            <p class="text-xs text-gray-400 mt-1">Current development interface</p>
+                            <p class="text-xs text-gray-400 mt-1">Current development interface • <span class="text-purple-400">Click to expand</span></p>
                         </div>
                     </div>
                     
                     <div class="bg-gray-700 rounded-lg overflow-hidden border border-gray-600 hover:border-purple-500 transition-colors">
-                        <img src="pics/proxmox-ui.png" alt="Proxmox UI" class="w-full h-64 object-cover">
+                        <img src="pics/proxmox-ui.png" alt="Proxmox UI" class="w-full h-64 object-cover cursor-pointer hover:opacity-90 transition-opacity" onclick="openFullscreen(this)">
                         <div class="p-4">
                             <p class="text-gray-200 font-medium">Proxmox UI Integration</p>
-                            <p class="text-xs text-gray-400 mt-1">User interface design</p>
+                            <p class="text-xs text-gray-400 mt-1">User interface design • <span class="text-purple-400">Click to expand</span></p>
                         </div>
                     </div>
                 </div>
@@ -280,6 +280,23 @@
         </div>
     </div>
 
+    <!-- Fullscreen Modal -->
+    <div id="fullscreenModal" class="fixed inset-0 bg-black bg-opacity-90 hidden z-50 flex items-center justify-center p-4" onclick="closeFullscreen()">
+        <div class="relative max-w-full max-h-full flex items-center justify-center">
+            <img id="fullscreenImage" src="" alt="" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl">
+            
+            <!-- Close Button -->
+            <button onclick="closeFullscreen()" class="absolute top-4 right-4 bg-red-600 hover:bg-red-700 text-white rounded-full w-12 h-12 flex items-center justify-center transition-colors shadow-lg">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            
+            <!-- Image Info -->
+            <div class="absolute bottom-4 left-4 bg-gray-900 bg-opacity-80 rounded-lg px-4 py-2">
+                <p id="fullscreenImageTitle" class="text-white font-medium"></p>
+            </div>
+        </div>
+    </div>
+
     <!-- Floating Progress Indicator -->
     <div class="fixed bottom-6 right-6">
         <div class="bg-gray-800 rounded-full p-4 shadow-2xl border border-gray-600">
@@ -294,5 +311,58 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function openFullscreen(imgElement) {
+            const modal = document.getElementById('fullscreenModal');
+            const fullscreenImage = document.getElementById('fullscreenImage');
+            const imageTitle = document.getElementById('fullscreenImageTitle');
+            
+            // Set the fullscreen image source and alt text
+            fullscreenImage.src = imgElement.src;
+            fullscreenImage.alt = imgElement.alt;
+            
+            // Set the image title
+            imageTitle.textContent = imgElement.alt;
+            
+            // Show the modal
+            modal.classList.remove('hidden');
+            
+            // Prevent body scrolling when modal is open
+            document.body.style.overflow = 'hidden';
+            
+            // Stop propagation to prevent immediate closing
+            event.stopPropagation();
+        }
+        
+        function closeFullscreen() {
+            const modal = document.getElementById('fullscreenModal');
+            
+            // Hide the modal
+            modal.classList.add('hidden');
+            
+            // Restore body scrolling
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Close modal when clicking on the modal background
+        document.getElementById('fullscreenModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeFullscreen();
+            }
+        });
+        
+        // Close modal when pressing Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeFullscreen();
+            }
+        });
+        
+        // Prevent modal from closing when clicking on the image
+        document.getElementById('fullscreenImage').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    </script>
 </body>
 </html>
