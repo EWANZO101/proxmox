@@ -254,12 +254,16 @@ Still TBD when v1 will be released. Last updated: 28/08/2025.                </p
                     </div>
                 </div>
                 
-                <!-- Video Notice -->
-                <div class="mt-4 p-4 bg-blue-900/30 border border-blue-500/30 rounded-lg">
-                    <div class="flex items-center">
-                        <i class="fas fa-video text-blue-400 mr-2"></i>
-                        <span class="text-blue-300">https://youtu.be/bJPU15kDLOU</span>
+                <!-- Video Demo -->
+                <div class="mt-4 p-4 bg-blue-900/30 border border-blue-500/30 rounded-lg cursor-pointer hover:bg-blue-800/30 transition-colors" onclick="openVideoModal()">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fas fa-play-circle text-blue-400 mr-2 text-xl"></i>
+                            <span class="text-blue-300 font-medium">Watch Development Demo</span>
+                        </div>
+                        <i class="fas fa-external-link-alt text-blue-400 text-sm"></i>
                     </div>
+                    <p class="text-blue-200 text-sm mt-1 ml-7">Click to watch the latest functionality showcase</p>
                 </div>
             </div>
 
@@ -304,6 +308,27 @@ Still TBD when v1 will be released. Last updated: 28/08/2025.                </p
         </div>
     </div>
 
+    <!-- Fullscreen Video Modal -->
+    <div id="videoModal" class="fixed inset-0 bg-black hidden z-60 flex items-center justify-center">
+        <!-- Close Button -->
+        <button onclick="closeVideoModal()" class="absolute top-6 right-6 bg-red-600 hover:bg-red-700 text-white rounded-full w-14 h-14 flex items-center justify-center transition-colors shadow-lg z-70">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+        
+        <!-- Video Container -->
+        <div class="w-full h-full flex items-center justify-center p-4">
+            <iframe 
+                id="videoFrame"
+                class="w-full h-full max-w-7xl max-h-full"
+                src=""
+                title="Proxmox Integration Demo" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+
     <!-- Floating Progress Indicator -->
     <div class="fixed bottom-6 right-6">
         <div class="bg-gray-800 rounded-full p-4 shadow-2xl border border-gray-600">
@@ -320,6 +345,7 @@ Still TBD when v1 will be released. Last updated: 28/08/2025.                </p
     </div>
 
     <script>
+        // Image fullscreen functions
         function openFullscreen(imgElement) {
             const modal = document.getElementById('fullscreenModal');
             const fullscreenImage = document.getElementById('fullscreenImage');
@@ -351,23 +377,58 @@ Still TBD when v1 will be released. Last updated: 28/08/2025.                </p
             // Restore body scrolling
             document.body.style.overflow = 'auto';
         }
+
+        // Video modal functions
+        function openVideoModal() {
+            const videoModal = document.getElementById('videoModal');
+            const videoFrame = document.getElementById('videoFrame');
+            
+            // Set the YouTube embed URL
+            videoFrame.src = 'https://www.youtube.com/embed/bJPU15kDLOU?autoplay=1&rel=0&modestbranding=1';
+            
+            // Show the video modal
+            videoModal.classList.remove('hidden');
+            
+            // Prevent body scrolling when modal is open
+            document.body.style.overflow = 'hidden';
+        }
         
-        // Close modal when clicking on the modal background
+        function closeVideoModal() {
+            const videoModal = document.getElementById('videoModal');
+            const videoFrame = document.getElementById('videoFrame');
+            
+            // Clear the video src to stop playback
+            videoFrame.src = '';
+            
+            // Hide the modal
+            videoModal.classList.add('hidden');
+            
+            // Restore body scrolling
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Image modal event listeners
         document.getElementById('fullscreenModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeFullscreen();
             }
         });
         
-        // Close modal when pressing Escape key
+        // Global keyboard event listeners
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeFullscreen();
+                closeVideoModal();
             }
         });
         
-        // Prevent modal from closing when clicking on the image
+        // Prevent image modal from closing when clicking on the image
         document.getElementById('fullscreenImage').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Prevent video modal from closing when clicking on the iframe
+        document.getElementById('videoFrame').addEventListener('click', function(e) {
             e.stopPropagation();
         });
     </script>
